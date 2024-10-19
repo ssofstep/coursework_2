@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from pprint import pprint
+
 import requests
 
 
@@ -10,7 +12,7 @@ class Parser(ABC):
         pass
 
     @abstractmethod
-    def load_vacancies(self, keyword, pages=20):
+    def load_vacancies(self, keyword: str, pages=20):
         pass
 
 
@@ -21,17 +23,36 @@ class HH(Parser):
     """
 
     def __init__(self):
-        self.url = 'https://api.hh.ru/vacancies'
-        self.headers = {'User-Agent': 'HH-User-Agent'}
-        self.params = {'text': '', 'page': 0, 'per_page': 100}
-        self.vacancies = []
+        self.__url = 'https://api.hh.ru/vacancies'
+        self.__headers = {'User-Agent': 'HH-User-Agent'}
+        self.__params = {'text': '', 'page': 0, 'per_page': 100}
+        self.__vacancies = []
 
-    def load_vacancies(self, keyword, pages=20):
-        self.params['text'] = keyword
-        while self.params.get('page') != pages:
-            print("start")
-            response = requests.get(self.url, headers=self.headers, params=self.params)
-            print(response.status_code)
+    @property
+    def url(self):
+        return self.__url
+
+    @property
+    def headers(self):
+        return self.__headers
+
+    @property
+    def params(self):
+        return self.__params
+
+    @property
+    def vacancies(self):
+        return self.__vacancies
+
+    def load_vacancies(self, keyword: str, pages=20):
+        self.__params['text'] = keyword
+        while self.__params.get('page') != pages:
+
+            response = requests.get(self.__url, headers=self.__headers, params=self.__params)
             vacancies = response.json()['items']
-            self.vacancies.extend(vacancies)
-            self.params['page'] += 1
+            self.__vacancies.extend(vacancies)
+            self.__params['page'] += 1
+
+hh = HH()
+hh.load_vacancies("python", 1)
+pprint(hh.vacancies[0])
