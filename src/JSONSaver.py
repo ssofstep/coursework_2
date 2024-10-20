@@ -27,10 +27,12 @@ class JSONSaver(Json_saver):
             json.dump([], file)
 
     def __dump(self, item: list) -> None:
+        """Метод записи в json файл"""
         with open(self.__filename, "w", encoding="UTF8") as file:
             json.dump(item, file, ensure_ascii=False)
 
     def add_vacancy(self, vacancy: Vacancy) -> None:
+        """Метод, который добавляет вакансию в json файл"""
         data = {
             "name": vacancy.name,
             "link": vacancy.link,
@@ -44,6 +46,7 @@ class JSONSaver(Json_saver):
             self.__dump(item)
 
     def delete_vacancy(self, vacancy: Vacancy) -> None:
+        """Метод, который удаляет вакансию из json файла"""
         data = {
             "name": vacancy.name,
             "link": vacancy.link,

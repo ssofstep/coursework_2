@@ -45,12 +45,14 @@ class HH(Parser):
         return self.__vacancies
 
     def __connect_api(self) -> None:
+        """Метод подключения к API hh.ru"""
         response = requests.get(self.__url, headers=self.__headers, params=self.__params)
         if response.ok:
             vacancies = response.json()["items"]
             self.__vacancies.extend(vacancies)
 
     def load_vacancies(self, keyword: str, pages: int = 20) -> None:
+        """Метод, который загружает вакансии из hh.ru"""
         self.__params["text"] = keyword
         while self.__params.get("page") != pages:
             self.__connect_api()
